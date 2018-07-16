@@ -1,187 +1,187 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.crm.dao.LogmessageMapper">
-  <!--配置redis-->
-  <!--<cache type="com.crm.utils.cache.RedisCache"/>-->
+<mapper namespace="com.crm.dao.mysql.LogmessageMapper">
+    <!--配置redis-->
+    <!--<cache type="com.crm.utils.cache.RedisCache"/>-->
 
-  <resultMap id="BaseResultMap" type="com.crm.pojo.Logmessage">
-    <id column="Id" jdbcType="INTEGER" property="id" />
-    <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="roles" jdbcType="VARCHAR" property="roles" />
-    <result column="status" jdbcType="VARCHAR" property="status" />
-    <result column="methodname" jdbcType="VARCHAR" property="methodname" />
-    <result column="argus" jdbcType="VARCHAR" property="argus" />
-    <result column="desciption" jdbcType="VARCHAR" property="desciption" />
-    <result column="startdatetime" jdbcType="VARCHAR" property="startdatetime" />
-    <result column="enddatetime" jdbcType="VARCHAR" property="enddatetime" />
-    <result column="time" jdbcType="VARCHAR" property="time" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.crm.pojo.Logmessage">
-    <result column="exception" jdbcType="LONGVARCHAR" property="exception" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    Id, username, roles, status, methodname, argus, desciption, startdatetime, enddatetime, 
-    time
-  </sql>
-  <sql id="Blob_Column_List">
-    exception
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from logmessage
-    where Id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from logmessage
-    where Id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.crm.pojo.Logmessage">
-    insert into logmessage (Id, username, roles, 
-      status, methodname, argus, 
-      desciption, startdatetime, enddatetime, 
-      time, exception)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{roles,jdbcType=VARCHAR}, 
-      #{status,jdbcType=VARCHAR}, #{methodname,jdbcType=VARCHAR}, #{argus,jdbcType=VARCHAR}, 
-      #{desciption,jdbcType=VARCHAR}, #{startdatetime,jdbcType=VARCHAR}, #{enddatetime,jdbcType=VARCHAR}, 
-      #{time,jdbcType=VARCHAR}, #{exception,jdbcType=LONGVARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.crm.pojo.Logmessage">
-    insert into logmessage
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        Id,
-      </if>
-      <if test="username != null">
-        username,
-      </if>
-      <if test="roles != null">
-        roles,
-      </if>
-      <if test="status != null">
-        status,
-      </if>
-      <if test="methodname != null">
-        methodname,
-      </if>
-      <if test="argus != null">
-        argus,
-      </if>
-      <if test="desciption != null">
-        desciption,
-      </if>
-      <if test="startdatetime != null">
-        startdatetime,
-      </if>
-      <if test="enddatetime != null">
-        enddatetime,
-      </if>
-      <if test="time != null">
-        time,
-      </if>
-      <if test="exception != null">
-        exception,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="username != null">
-        #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="roles != null">
-        #{roles,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="methodname != null">
-        #{methodname,jdbcType=VARCHAR},
-      </if>
-      <if test="argus != null">
-        #{argus,jdbcType=VARCHAR},
-      </if>
-      <if test="desciption != null">
-        #{desciption,jdbcType=VARCHAR},
-      </if>
-      <if test="startdatetime != null">
-        #{startdatetime,jdbcType=VARCHAR},
-      </if>
-      <if test="enddatetime != null">
-        #{enddatetime,jdbcType=VARCHAR},
-      </if>
-      <if test="time != null">
-        #{time,jdbcType=VARCHAR},
-      </if>
-      <if test="exception != null">
-        #{exception,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.crm.pojo.Logmessage">
-    update logmessage
-    <set>
-      <if test="username != null">
-        username = #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="roles != null">
+    <resultMap id="BaseResultMap" type="com.crm.pojo.mysql.Logmessage">
+        <id column="Id" jdbcType="INTEGER" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="roles" jdbcType="VARCHAR" property="roles"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="methodname" jdbcType="VARCHAR" property="methodname"/>
+        <result column="argus" jdbcType="VARCHAR" property="argus"/>
+        <result column="desciption" jdbcType="VARCHAR" property="desciption"/>
+        <result column="startdatetime" jdbcType="VARCHAR" property="startdatetime"/>
+        <result column="enddatetime" jdbcType="VARCHAR" property="enddatetime"/>
+        <result column="time" jdbcType="VARCHAR" property="time"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.crm.pojo.mysql.Logmessage">
+        <result column="exception" jdbcType="LONGVARCHAR" property="exception"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        Id, username, roles, status, methodname, argus, desciption, startdatetime, enddatetime,
+        time
+    </sql>
+    <sql id="Blob_Column_List">
+        exception
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from logmessage
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from logmessage
+        where Id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.crm.pojo.mysql.Logmessage">
+        insert into logmessage (Id, username, roles,
+        status, methodname, argus,
+        desciption, startdatetime, enddatetime,
+        time, exception)
+        values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{roles,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR}, #{methodname,jdbcType=VARCHAR}, #{argus,jdbcType=VARCHAR},
+        #{desciption,jdbcType=VARCHAR}, #{startdatetime,jdbcType=VARCHAR}, #{enddatetime,jdbcType=VARCHAR},
+        #{time,jdbcType=VARCHAR}, #{exception,jdbcType=LONGVARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.crm.pojo.mysql.Logmessage">
+        insert into logmessage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="roles != null">
+                roles,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="methodname != null">
+                methodname,
+            </if>
+            <if test="argus != null">
+                argus,
+            </if>
+            <if test="desciption != null">
+                desciption,
+            </if>
+            <if test="startdatetime != null">
+                startdatetime,
+            </if>
+            <if test="enddatetime != null">
+                enddatetime,
+            </if>
+            <if test="time != null">
+                time,
+            </if>
+            <if test="exception != null">
+                exception,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="roles != null">
+                #{roles,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="methodname != null">
+                #{methodname,jdbcType=VARCHAR},
+            </if>
+            <if test="argus != null">
+                #{argus,jdbcType=VARCHAR},
+            </if>
+            <if test="desciption != null">
+                #{desciption,jdbcType=VARCHAR},
+            </if>
+            <if test="startdatetime != null">
+                #{startdatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="enddatetime != null">
+                #{enddatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="time != null">
+                #{time,jdbcType=VARCHAR},
+            </if>
+            <if test="exception != null">
+                #{exception,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.crm.pojo.mysql.Logmessage">
+        update logmessage
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="roles != null">
+                roles = #{roles,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="methodname != null">
+                methodname = #{methodname,jdbcType=VARCHAR},
+            </if>
+            <if test="argus != null">
+                argus = #{argus,jdbcType=VARCHAR},
+            </if>
+            <if test="desciption != null">
+                desciption = #{desciption,jdbcType=VARCHAR},
+            </if>
+            <if test="startdatetime != null">
+                startdatetime = #{startdatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="enddatetime != null">
+                enddatetime = #{enddatetime,jdbcType=VARCHAR},
+            </if>
+            <if test="time != null">
+                time = #{time,jdbcType=VARCHAR},
+            </if>
+            <if test="exception != null">
+                exception = #{exception,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.crm.pojo.mysql.Logmessage">
+        update logmessage
+        set username = #{username,jdbcType=VARCHAR},
         roles = #{roles,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null">
         status = #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="methodname != null">
         methodname = #{methodname,jdbcType=VARCHAR},
-      </if>
-      <if test="argus != null">
         argus = #{argus,jdbcType=VARCHAR},
-      </if>
-      <if test="desciption != null">
         desciption = #{desciption,jdbcType=VARCHAR},
-      </if>
-      <if test="startdatetime != null">
         startdatetime = #{startdatetime,jdbcType=VARCHAR},
-      </if>
-      <if test="enddatetime != null">
         enddatetime = #{enddatetime,jdbcType=VARCHAR},
-      </if>
-      <if test="time != null">
         time = #{time,jdbcType=VARCHAR},
-      </if>
-      <if test="exception != null">
-        exception = #{exception,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    where Id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.crm.pojo.Logmessage">
-    update logmessage
-    set username = #{username,jdbcType=VARCHAR},
-      roles = #{roles,jdbcType=VARCHAR},
-      status = #{status,jdbcType=VARCHAR},
-      methodname = #{methodname,jdbcType=VARCHAR},
-      argus = #{argus,jdbcType=VARCHAR},
-      desciption = #{desciption,jdbcType=VARCHAR},
-      startdatetime = #{startdatetime,jdbcType=VARCHAR},
-      enddatetime = #{enddatetime,jdbcType=VARCHAR},
-      time = #{time,jdbcType=VARCHAR},
-      exception = #{exception,jdbcType=LONGVARCHAR}
-    where Id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.crm.pojo.Logmessage">
-    update logmessage
-    set username = #{username,jdbcType=VARCHAR},
-      roles = #{roles,jdbcType=VARCHAR},
-      status = #{status,jdbcType=VARCHAR},
-      methodname = #{methodname,jdbcType=VARCHAR},
-      argus = #{argus,jdbcType=VARCHAR},
-      desciption = #{desciption,jdbcType=VARCHAR},
-      startdatetime = #{startdatetime,jdbcType=VARCHAR},
-      enddatetime = #{enddatetime,jdbcType=VARCHAR},
-      time = #{time,jdbcType=VARCHAR}
-    where Id = #{id,jdbcType=INTEGER}
-  </update>
+        exception = #{exception,jdbcType=LONGVARCHAR}
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.crm.pojo.mysql.Logmessage">
+        update logmessage
+        set username = #{username,jdbcType=VARCHAR},
+        roles = #{roles,jdbcType=VARCHAR},
+        status = #{status,jdbcType=VARCHAR},
+        methodname = #{methodname,jdbcType=VARCHAR},
+        argus = #{argus,jdbcType=VARCHAR},
+        desciption = #{desciption,jdbcType=VARCHAR},
+        startdatetime = #{startdatetime,jdbcType=VARCHAR},
+        enddatetime = #{enddatetime,jdbcType=VARCHAR},
+        time = #{time,jdbcType=VARCHAR}
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
 </mapper>

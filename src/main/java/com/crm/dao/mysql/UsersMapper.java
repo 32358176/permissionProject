@@ -1,4 +1,4 @@
-package com.crm.dao;
+package com.crm.dao.mysql;
 
 import com.crm.pojo.mysql.Users;
 import org.apache.ibatis.annotations.Param;
@@ -19,7 +19,7 @@ public interface UsersMapper {
 
     int updateByPrimaryKey(Users record);
 
-    Users selectUserByUserNameAndPassword(@Param("username")String username, @Param("password")String password);
+    Users selectUserByUserNameAndPassword(@Param("username") String username, @Param("password") String password);
 
     List<String> queryPermissionByUserId(Integer id);
 
@@ -43,11 +43,11 @@ public interface UsersMapper {
 
     Users selectUserByUsername(String username);
 
-    Integer insertUser(@Param("username") String username, @Param("password") String password, @Param("email") String email,@Param("telephone") String telephone);
+    Integer insertUser(@Param("username") String username, @Param("password") String password, @Param("email") String email, @Param("telephone") String telephone);
 
-    Integer updateUserByUser(@Param("userid") Integer userid,@Param("username")String username,@Param("password") String password,@Param("email") String email,@Param("telephone") String telephone);
+    Integer updateUserByUser(@Param("userid") Integer userid, @Param("username") String username, @Param("password") String password, @Param("email") String email, @Param("telephone") String telephone);
 
-    Integer resetUserPassword(@Param("userId") Integer userId,@Param("password")String password);
+    Integer resetUserPassword(@Param("userId") Integer userId, @Param("password") String password);
 
     Integer lockUserByUserId(@Param("userId") Integer userId, @Param("isLockout") String isLockout);
 
@@ -61,5 +61,5 @@ public interface UsersMapper {
 
     Integer clearWrongTime(Integer userId);
 
-    Integer updateUserIpAndTime(@Param("userId") Integer userId,@Param("Ip") String Ip);
+    Integer updateUserIpAndTime(@Param("userId") Integer userId, @Param("Ip") String Ip);
 }

@@ -1,4 +1,4 @@
-package com.crm.view;
+package com.crm.view.mysql;
 
 
 import com.crm.service.rabbit.Producer;
@@ -18,8 +18,8 @@ public class MessageController {
     private Producer producer;
 
     @GetMapping("/producer")
-    public String messageProducer(){
-        producer.setMessageForQueue("mq_exchange","mq_url","中国");
+    public String messageProducer(String mess) {
+        producer.setMessageForQueue("mq_exchange", "mq_url", mess);
         return "发送成功";
     }
 

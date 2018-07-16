@@ -1,4 +1,4 @@
-package com.crm.dao;
+package com.crm.dao.mysql;
 
 import com.crm.pojo.mysql.Modules;
 import org.apache.ibatis.annotations.Param;

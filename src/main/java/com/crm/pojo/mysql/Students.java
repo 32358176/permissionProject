@@ -1,4 +1,4 @@
-package com.crm.pojo;
+package com.crm.pojo.mysql;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -48,19 +48,19 @@ public class Students implements Serializable {
 
     private String isreturnvist;
 
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date firstvisittime;
 
     private String ishome;
 
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date hometime;
 
     private String lostvalid;
 
     private String ispay;
 
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date paytime;
 
     private Double money;
@@ -69,7 +69,7 @@ public class Students implements Serializable {
 
     private String isinclass;
 
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date inclasstime;
 
     private String inclasscontent;
@@ -92,7 +92,7 @@ public class Students implements Serializable {
 
     private Double premoney;
 
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date premoneytime;
 
     public Integer getId() {

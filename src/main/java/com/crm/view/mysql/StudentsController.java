@@ -1,8 +1,8 @@
-package com.crm.view;
+package com.crm.view.mysql;
 
-import com.crm.pojo.Page;
-import com.crm.pojo.Students;
-import com.crm.service.StudentsService;
+import com.crm.pojo.mysql.Page;
+import com.crm.pojo.mysql.Students;
+import com.crm.service.mysql.StudentsService;
 import com.crm.utils.PoiUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Map;
 
 @CrossOrigin
@@ -24,6 +23,7 @@ public class StudentsController {
 
     /**
      * 查询所有学生
+     *
      * @param page
      * @param limit
      * @return Page 查询所有学生分页信息
@@ -35,6 +35,7 @@ public class StudentsController {
 
     /**
      * 不定条件查询学生
+     *
      * @param page
      * @param limit
      * @param name
@@ -54,6 +55,7 @@ public class StudentsController {
 
     /**
      * 添加学生
+     *
      * @param students
      * @return Map 添加学生返回信息
      */
@@ -65,6 +67,7 @@ public class StudentsController {
 
     /**
      * 根据学生ID删除学生
+     *
      * @param studentId
      * @return Map 根据学生ID删除学生返回信息
      */
@@ -75,6 +78,7 @@ public class StudentsController {
 
     /**
      * 编辑学生
+     *
      * @param students
      * @return Map 编辑学生返回信息
      */
@@ -85,6 +89,7 @@ public class StudentsController {
 
     /**
      * 导出学生EXCEL
+     *
      * @param response 导出学生EXCEL
      */
     @GetMapping(value = "/downloadStudents", name = "导出学生EXCEL")
@@ -93,7 +98,8 @@ public class StudentsController {
     }
 
     /**
-     *上传学生EXCEL
+     * 上传学生EXCEL
+     *
      * @param file
      * @return
      * @throws ParseException 上传学生EXCEL
@@ -105,6 +111,7 @@ public class StudentsController {
 
     /**
      * 给学生分配老师
+     *
      * @param ids
      * @param askerId
      * @param askerName
@@ -117,24 +124,26 @@ public class StudentsController {
 
     /**
      * 查询我的学生
+     *
      * @param page
      * @param limit
      * @param userId
      * @param stuname
      * @return Page 查询我的学生返回分页信息
      */
-    @GetMapping(value = "/selectStudentsByUserId",name = "查询我的学生")
-    public Page selectStudentsByUserId(Integer page,Integer limit,Integer userId,String stuname){
-        return studentsService.selectStudentsByUserId(page,limit,userId,stuname);
+    @GetMapping(value = "/selectStudentsByUserId", name = "查询我的学生")
+    public Page selectStudentsByUserId(Integer page, Integer limit, Integer userId, String stuname) {
+        return studentsService.selectStudentsByUserId(page, limit, userId, stuname);
     }
 
     /**
      * 批量删除学生
+     *
      * @param ids
      * @return Map 批量删除学生返回信息
      */
-    @GetMapping(value = "/delectStudentByStudentsIds",name = "批量删除学生")
-    public Map delectStudentByStudentsIds(Integer[] ids){
+    @GetMapping(value = "/delectStudentByStudentsIds", name = "批量删除学生")
+    public Map delectStudentByStudentsIds(Integer[] ids) {
         return studentsService.delectStudentByStudentsIds(ids);
     }
 

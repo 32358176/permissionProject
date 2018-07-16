@@ -1,5 +1,6 @@
-package com.crm.view;
+package com.crm.view.mysql;
 
+import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
@@ -16,14 +17,20 @@ public class SocketController {
             new CopyOnWriteArraySet<SocketController>();
 
     @OnOpen
-    public void onOpen(Session session){
+    public void onOpen(Session session) {
         this.session = session;
         controllers.add(this);
     }
 
+    @OnClose
+    public void onClose() {
+        controllers.remove(this);
+        System.out.println("删除链接");
+    }
+
     @OnMessage
-    public void onMessage(String message){
-        System.out.println(message);
+    public void onMessage(String message) {
+        System.out.println(">>>>>>>>>>>>>>" + message);
     }
 
     public void onSendMessage(String message) throws IOException {

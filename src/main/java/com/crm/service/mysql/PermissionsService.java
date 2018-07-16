@@ -1,9 +1,9 @@
-package com.crm.service;
+package com.crm.service.mysql;
 
-import com.crm.dao.PermissionsMapper;
-import com.crm.dao.UsersMapper;
-import com.crm.pojo.Page;
-import com.crm.pojo.Permissions;
+import com.crm.dao.mysql.PermissionsMapper;
+import com.crm.dao.mysql.UsersMapper;
+import com.crm.pojo.mysql.Page;
+import com.crm.pojo.mysql.Permissions;
 import com.crm.utils.SystemLog;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -23,27 +23,30 @@ public class PermissionsService {
 
     /**
      * 查询所有权限名称
+     *
      * @return 查询所有权限名称返回权限名称集合
      */
     @SystemLog(description = "查询所有权限名称")
-    public List<String> queryAll(){
+    public List<String> queryAll() {
         return permissionsMapper.queryAll();
     }
 
 
     /**
      * 插入权限操作
+     *
      * @param permissiontbs
      * @return 插入权限操作返回影像行数
      */
-    @SystemLog(description = "插入权限操作",isWrite = false)
-    public int insertSystemPermission(List<Permissions> permissiontbs){
+    @SystemLog(description = "插入权限操作", isWrite = false)
+    public int insertSystemPermission(List<Permissions> permissiontbs) {
         return permissionsMapper.batchInsert(permissiontbs);
 
     }
 
     /**
      * 根据用户ID查询用户权限操作
+     *
      * @param id
      * @return 根据用户ID查询用户权限操作返回权限名称集合
      */
@@ -54,13 +57,14 @@ public class PermissionsService {
 
     /**
      * 查询所有权限
+     *
      * @param page
      * @param limit
      * @return 查询所有权限返回分页信息
      */
     @SystemLog(description = "查询所有权限")
     public Page queryAllpermissions(Integer page, Integer limit) {
-        PageHelper.startPage(page,limit);
+        PageHelper.startPage(page, limit);
         List<Permissions> permissions = permissionsMapper.queryAllpermissions();
         return new Page(new PageInfo(permissions));
     }

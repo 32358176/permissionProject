@@ -54,7 +54,6 @@ public class SystemUserInfo {
     }
 
 
-
     public String getToken() {
         return token;
     }

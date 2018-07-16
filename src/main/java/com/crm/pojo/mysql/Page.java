@@ -1,4 +1,4 @@
-package com.crm.pojo;
+package com.crm.pojo.mysql;
 
 import com.github.pagehelper.PageInfo;
 

@@ -1,4 +1,4 @@
-package com.crm.dao;
+package com.crm.dao.mysql;
 
 import com.crm.pojo.mysql.Students;
 import org.apache.ibatis.annotations.Param;
@@ -14,6 +14,7 @@ public interface StudentsMapper {
 
     /**
      * 插入学生
+     *
      * @param record
      * @return 受影响行数
      */
@@ -30,7 +31,7 @@ public interface StudentsMapper {
     List<Students> queryAllStu();
 
     List<Students> queryStuBySelect(@Param("name") String name, @Param("telephone") String telephone,
-                                    @Param("askerName") String askerName,@Param("date")String date,
+                                    @Param("askerName") String askerName, @Param("date") String date,
                                     @Param("isPay") String isPay, @Param("isValid") String isValid,
                                     @Param("isVisit") String isVisit);
 
@@ -41,7 +42,7 @@ public interface StudentsMapper {
 
     Integer updateStudentsByIds(@Param("list") Integer[] list, @Param("askerId") Integer askerId, @Param("askerName") String askerName);
 
-    List<Students> selectStudentsByUserId(@Param("userId") Integer userId,@Param("stuname")String stuname);
+    List<Students> selectStudentsByUserId(@Param("userId") Integer userId, @Param("stuname") String stuname);
 
     Integer delectStudentByStudentsIds(@Param("list") Integer[] list);
 }

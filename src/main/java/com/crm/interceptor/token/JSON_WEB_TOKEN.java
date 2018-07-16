@@ -4,15 +4,30 @@ import java.util.List;
 
 public class JSON_WEB_TOKEN {
     private Integer id;
+    private String loginname;
     private List<String> roles;
     private List<String> permissions;
 
     public JSON_WEB_TOKEN() {
     }
 
+    public JSON_WEB_TOKEN(Integer id, String loginname, List<String> permissions) {
+        this.id = id;
+        this.loginname = loginname;
+        this.permissions = permissions;
+    }
+
     public JSON_WEB_TOKEN(Integer id, List<String> permissions) {
         this.id = id;
         this.permissions = permissions;
+    }
+
+    public String getLoginname() {
+        return loginname;
+    }
+
+    public void setLoginname(String loginname) {
+        this.loginname = loginname;
     }
 
     public Integer getId() {

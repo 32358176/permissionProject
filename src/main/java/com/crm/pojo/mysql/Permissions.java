@@ -1,4 +1,4 @@
-package com.crm.pojo;
+package com.crm.pojo.mysql;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -1,10 +1,10 @@
-package com.crm.service;
+package com.crm.service.mysql;
 
-import com.crm.dao.ModulesMapper;
-import com.crm.dao.RolesMapper;
-import com.crm.pojo.Modules;
-import com.crm.pojo.Page;
-import com.crm.pojo.Roles;
+import com.crm.dao.mysql.ModulesMapper;
+import com.crm.dao.mysql.RolesMapper;
+import com.crm.pojo.mysql.Modules;
+import com.crm.pojo.mysql.Page;
+import com.crm.pojo.mysql.Roles;
 import com.crm.utils.SystemLog;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -27,6 +27,7 @@ public class RolesService {
 
     /**
      * 查询所有角色信息
+     *
      * @return 查询所有角色信息返回角色名集合
      */
     @SystemLog(description = "查询所有角色信息")
@@ -36,6 +37,7 @@ public class RolesService {
 
     /**
      * 根据用户ID查询用户角色ID
+     *
      * @param id
      * @return 根据用户ID查询用户角色ID返回角色ID集合
      */
@@ -48,6 +50,7 @@ public class RolesService {
 
     /**
      * 根据角色查询用户
+     *
      * @param userId
      * @return 根据角色查询用户返回用户名集合
      */
@@ -58,6 +61,7 @@ public class RolesService {
 
     /**
      * 查询所有角色
+     *
      * @param page
      * @param limit
      * @return 查询所有角色返回分页信息
@@ -71,6 +75,7 @@ public class RolesService {
 
     /**
      * 创建新角色
+     *
      * @param rolesName
      * @return 创建新角色返回信息
      */
@@ -96,6 +101,7 @@ public class RolesService {
 
     /**
      * 删除角色
+     *
      * @param rolesId
      * @return 删除角色返回信息
      */
@@ -118,6 +124,7 @@ public class RolesService {
 
     /**
      * 编辑角色
+     *
      * @param rolesName
      * @param rolesId
      * @return 编辑角色返回信息
@@ -143,6 +150,7 @@ public class RolesService {
 
     /**
      * 查询角色未拥有权限
+     *
      * @param rolesId
      * @return 查询角色未拥有权限返回信息
      */
@@ -165,6 +173,7 @@ public class RolesService {
 
     /**
      * 添加角色权限
+     *
      * @param rolesId
      * @param permissionName
      * @return 添加角色权限返回信息
@@ -187,6 +196,7 @@ public class RolesService {
 
     /**
      * 删除角色权限
+     *
      * @param rolesId
      * @param permissionName
      * @return 删除角色权限返回信息
@@ -208,6 +218,7 @@ public class RolesService {
 
     /**
      * 查询角色所有信息
+     *
      * @param rolesId
      * @return 查询角色所有信息返回信息
      */
@@ -237,6 +248,7 @@ public class RolesService {
 
     /**
      * 根据角色ID查询所有角色未拥有模块
+     *
      * @param rolesId
      * @return 根据角色ID查询所有角色未拥有模块返回模块集合
      */
@@ -247,6 +259,7 @@ public class RolesService {
 
     /**
      * 根据角色ID查询所有角色拥有模块
+     *
      * @param rolesId
      * @return 根据角色ID查询所有角色拥有模块返回模块集合
      */
@@ -257,6 +270,7 @@ public class RolesService {
 
     /**
      * 给角色添加模块
+     *
      * @param rolesId
      * @param modulesId
      * @return 给角色添加模块返回信息

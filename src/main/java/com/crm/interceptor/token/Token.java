@@ -15,22 +15,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class Token{
+public class Token {
     private static final String SECRET = "secret";
     private Gson gson = new Gson();
 
-    private Map createHander(){
+    private Map createHander() {
         Map map = new HashMap();
-        map.put("type","JWT");
-        map.put("alg","HS256");
+        map.put("type", "JWT");
+        map.put("alg", "HS256");
         return map;
     }
 
-    public <T> String createToken(Object t,Integer maxTime) throws UnsupportedEncodingException {
+    public <T> String createToken(Object t, Integer maxTime) throws UnsupportedEncodingException {
         JWTCreator.Builder builder = JWT.create();
         builder.withHeader(createHander());
         builder.withSubject(gson.toJson(t));
-        if(maxTime > 1){
+        if (maxTime > 1) {
             Long startTime = System.currentTimeMillis();
             Long endTime = startTime + maxTime;
             Date date = new Date(endTime);
@@ -39,17 +39,17 @@ public class Token{
         return builder.sign(Algorithm.HMAC256(SECRET));
     }
 
-    public <T> T unCreateToken(Class<T> tClass,String token) throws UnsupportedEncodingException, NoLoginException {
-        if(token == null){
+    public <T> T unCreateToken(Class<T> tClass, String token) throws UnsupportedEncodingException, NoLoginException {
+        if (token == null) {
             throw new NoLoginException();
         }
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
         DecodedJWT decodedJWT = verifier.verify(token);
         Date date = decodedJWT.getExpiresAt();
-        if(date != null && date.after(new Date())){
+        if (date != null && date.after(new Date())) {
             String subject = decodedJWT.getSubject();
-            return gson.fromJson(subject,tClass);
+            return gson.fromJson(subject, tClass);
         }
-                return null;
+        return null;
     }
 }

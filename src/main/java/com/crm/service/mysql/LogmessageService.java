@@ -1,8 +1,7 @@
-package com.crm.service;
+package com.crm.service.mysql;
 
-import com.crm.dao.LogmessageMapper;
-import com.crm.pojo.Logmessage;
-import com.crm.utils.SystemLog;
+import com.crm.dao.mysql.LogmessageMapper;
+import com.crm.pojo.mysql.Logmessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,7 @@ public class LogmessageService {
     private LogmessageMapper logmessageMapper;
 
 
-    public Integer insertLog(Logmessage logmessage){
-       return logmessageMapper.insertSelective(logmessage);
+    public Integer insertLog(Logmessage logmessage) {
+        return logmessageMapper.insertSelective(logmessage);
     }
 }

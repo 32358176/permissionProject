@@ -1,7 +1,6 @@
 package com.crm.utils;
 
 
-
 import java.lang.annotation.*;
 
 
@@ -10,6 +9,7 @@ import java.lang.annotation.*;
 @Inherited
 public @interface SystemLog {
     String description() default "";
+
     boolean isWrite() default true;
 
 }

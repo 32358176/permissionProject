@@ -1,8 +1,8 @@
-package com.crm.view;
+package com.crm.view.mysql;
 
-import com.crm.pojo.Page;
-import com.crm.pojo.Permissions;
-import com.crm.service.PermissionsService;
+import com.crm.pojo.mysql.Page;
+import com.crm.pojo.mysql.Permissions;
+import com.crm.service.mysql.PermissionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

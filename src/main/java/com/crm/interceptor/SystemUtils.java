@@ -9,13 +9,13 @@ public class SystemUtils {
             ".*/((login)|(logout)|(hello)|(mvc)|(app)|(weixin)|(static)|(main)|(websocket)).*";
     public static final String PERMISSION_NAME = "perssionName";
 
-    public static String getMethodOfPermission(HandlerMethod handler){
+    public static String getMethodOfPermission(HandlerMethod handler) {
         String permissionName = handler.getMethodAnnotation(RequestMapping.class).name();
-        if(permissionName.equals("")){
+        if (permissionName.equals("")) {
             return null;
         }
         String classPermissionURL = handler.getBeanType().getAnnotation(RequestMapping.class).value()[0];
         String methodPermissionURL = handler.getMethodAnnotation(RequestMapping.class).value()[0];
-        return (classPermissionURL + ":" + methodPermissionURL).replace("/","");
+        return (classPermissionURL + ":" + methodPermissionURL).replace("/", "");
     }
 }

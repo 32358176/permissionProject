@@ -4,7 +4,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
@@ -14,76 +14,206 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx.xsd
        http://www.springframework.org/schema/mvc
-       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
 
     <!--加载MVC注释驱动-->
     <mvc:annotation-driven/>
 
+
     <!--自定义切面动态代理-->
     <aop:aspectj-autoproxy proxy-target-class="true"/>
-
     <!--扫描crm包下所有的springbean，过滤掉controller层-->
     <context:component-scan base-package="com.crm.*">
         <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.RestController"/>
     </context:component-scan>
+    <!--加载同目录下的jdbc.properties文件-->
+    <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
+    <!--加载同目录下的redis.properties文件-->
+    <!--<context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true"/>-->
+    <!-- redis 配置 -->
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <property name="minIdle" value="${redis.minIdle}"/>
+        <property name="maxWaitMillis" value="${redis.maxWait}"/>
+        <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+    </bean>
+
+    <!--rabbitMq配置-->
+
+    <rabbit:connection-factory id="rabbitMqConnectionFactory"
+                               host="${rabbitMq.url}"
+                               username="${rabbitMq.username}"
+                               password="${rabbitMq.password}"
+                               port="${rabbitMq.port}"
+    />
+
+    <rabbit:admin connection-factory="rabbitMqConnectionFactory"/>
+
+    <!--声明mq模板,定义消息生产者-->
+
+    <rabbit:template id="amqpTemplate"
+                     exchange="mq_exchange"
+                     connection-factory="rabbitMqConnectionFactory"
+                     message-converter="jsonMessageConverter"
+    />
+
+    <bean id="jsonMessageConverter" class="com.crm.service.rabbit.GsonJsonMessageConverter"/>
+
+    <!--声明队列-->
+    <rabbit:queue name="message_queue" durable="true" auto-delete="false" exclusive="false"/>
+
+    <!--注册交换机-->
+    <rabbit:topic-exchange name="mq_exchange" durable="true" auto-delete="false">
+        <rabbit:bindings>
+            <rabbit:binding queue="message_queue" pattern="mq_url"></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+
+    <!--配置消费者-->
+    <bean id="messageCustomer" class="com.crm.service.rabbit.Customer"/>
+
+    <!--配置监听 监听队列中是否有新的消息-->
+    <rabbit:listener-container connection-factory="rabbitMqConnectionFactory"
+                               message-converter="jsonMessageConverter"
+                               acknowledge="auto">
+        <rabbit:listener
+                ref="messageCustomer"
+                queues="message_queue"
+                method="onMessage"
+        />
+    </rabbit:listener-container>
+
+    <!-- redis服务器中心 -->
+    <bean id="connectionFactory"
+          class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="poolConfig" ref="poolConfig"/>
+        <property name="port" value="${redis.port}"/>
+        <property name="hostName" value="${redis.host}"/>
+        <property name="password" value="${redis.pass}"/>
+        <property name="timeout" value="${redis.timeout}"/>
+    </bean>
+
+
+    <!--注入到自定义缓存-->
+    <bean id="redisCacheTransfer" class="com.crm.utils.cache.RedisCacheTransfer">
+        <property name="jedisConnectionFactory" ref="connectionFactory"/>
+    </bean>
+    <!-- redis操作模板，面向对象的模板 -->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <!-- 如果不配置Serializer，那么存储的时候只能使用String，如果用对象类型存储，那么会提示错误 -->
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+        </property>
+    </bean>
+
+    <!--配置mysql数据源-->
+    <bean id="mysqlDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.mysql.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.mysql.url}"/>
+        <property name="user" value="${jdbc.mysql.username}"/>
+        <property name="password" value="${jdbc.mysql.password}"/>
+    </bean>
+
+    <!--配置oracle数据源-->
+    <bean id="oracleDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.oracle.driverClass}"/>
+        <property name="jdbcUrl" value="${jdbc.oracle.jdbcUrl}"/>
+        <property name="user" value="${jdbc.oracle.user_name}"/>
+        <property name="password" value="${jdbc.oracle.password}"/>
+    </bean>
+
+    <!--数据源统一管理,并且为每一个数据源命名-->
+    <bean id="dateSourceUtils" class="com.crm.utils.data.DataSourceUtils">
+
+        <property name="defaultTargetDataSource" ref="mysqlDataSource"/>
+        <property name="targetDataSources">
+            <map>
+                <entry key="mysql" value-ref="mysqlDataSource"/>
+                <entry key="oracle" value-ref="oracleDataSource"/>
+            </map>
+        </property>
+    </bean>
+    <!--配置C3P0连接池-->
+    <!--<bean id="comboPooledDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">-->
+    <!--<property name="driverClass" value="${jdbc.driver}"/>-->
+    <!--<property name="jdbcUrl" value="${jdbc.url}"/>-->
+    <!--<property name="user" value="${jdbc.username}"/>-->
+    <!--<property name="password" value="${jdbc.password}"/>-->
+    <!--<property name="minPoolSize" value="${jdbc.minPoolSize}"/>-->
+    <!--<property name="maxPoolSize" value="${jdbc.maxPoolSize}"/>-->
+    <!--</bean>-->
+
 
     <!--扫描所有crm包下面的springbean-->
     <!--<context:component-scan base-package="com.crm.*"/>-->
 
-    <!--加载同目录下的jdbc.properties文件-->
-    <context:property-placeholder location="classpath:jdbc.properties"/>
-
-    <!--配置C3P0连接池-->
-    <bean id="comboPooledDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-        <property name="driverClass" value="${jdbc.driver}"/>
-        <property name="jdbcUrl" value="${jdbc.url}"/>
-        <property name="user" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
-        <property name="minPoolSize" value="${jdbc.minPoolSize}"/>
-        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"/>
-    </bean>
 
     <!--加载mybatis配置文件并提供sqlsessionfactory，加载所有的mapper下的XML文件-->
-    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
-        <property name="dataSource" ref="comboPooledDataSource"/>
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dateSourceUtils"/>
         <property name="configLocation" value="classpath:mybatis-config.xml"/>
-        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:mapper/mysql/*.xml</value>
+                <value>classpath:mapper/oracle/*.xml</value>
+            </list>
+        </property>
     </bean>
 
     <!--扫描dao包下的所有接口，并注入到spring-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.hanyong.dao"/>
+        <property name="basePackage" value="com.crm.dao"/>
     </bean>
 
 
-
-    <!--配置事务Bean-->
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="comboPooledDataSource"/>
+    <!--mysql事务管理-->
+    <bean id="mySql_transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="mysqlDataSource"/>
     </bean>
 
-    <!--配置事务切面-->
+    <!--oracle事务管理-->
+    <bean id="oracle_transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="oracleDataSource"/>
+    </bean>
+
     <aop:config>
-
-        <aop:pointcut id="empsService" expression="execution(* com.crm.service..*(..))"/>
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="empsService" order="2"/>
+        <aop:pointcut id="mysql_txPoint" expression="execution(* com.crm.service.mysql..*(..))"/>
+        <aop:advisor advice-ref="mysql_txAdvice" pointcut-ref="mysql_txPoint" order="30"/>
     </aop:config>
 
-    <!--配置方法权限，默认事物传播默认只读-->
-    <tx:advice id="txAdvice">
+    <aop:config>
+        <aop:pointcut id="oracle_txPoint" expression="execution(* com.crm.service.oracle..*(..))"/>
+        <aop:advisor advice-ref="oracle_txAdvice" pointcut-ref="oracle_txPoint" order="30"/>
+    </aop:config>
+
+    <tx:advice id="oracle_txAdvice" transaction-manager="oracle_transactionManager">
         <tx:attributes>
             <tx:method name="*"/>
+            <tx:method name="get*" read-only="true"/>
             <tx:method name="select*" read-only="true"/>
             <tx:method name="query*" read-only="true"/>
-            <tx:method name="delete*" read-only="false" propagation="REQUIRED"/>
-            <tx:method name="insert*" read-only="false" propagation="REQUIRED"/>
-            <tx:method name="update*" read-only="false" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+
+
+    <tx:advice id="mysql_txAdvice" transaction-manager="mySql_transactionManager">
+        <tx:attributes>
+            <tx:method name="*"/>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="select*" read-only="true"/>
+            <tx:method name="query*" read-only="true"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
         </tx:attributes>
     </tx:advice>
 
     <!--开启文件上传-->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-       <!--设置上传文件大小-->
+        <!--设置上传文件大小-->
         <property name="maxUploadSize" value="102400000000"/>
         <!--设定上传最大缓存-->
         <property name="maxInMemorySize" value="40960"/>
@@ -93,13 +223,13 @@
 
     <!--全局异常处理-->
     <!--<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">-->
-        <!--<property name="exceptionMappings">-->
-            <!--<props>-->
-                <!--&lt;!&ndash;<prop key="java.lang.Exception"></prop>&ndash;&gt;-->
-                <!--<prop key="com.hanyong.auth.exception.NoPermissionException">redirect:http://localhost:63343/page/permissionError.html</prop>-->
-                <!--<prop key="com.hanyong.auth.exception.NoLoginException">redirect:http://localhost:63343/page/loginErroe.html</prop>-->
-            <!--</props>-->
-        <!--</property>-->
+    <!--<property name="exceptionMappings">-->
+    <!--<props>-->
+    <!--&lt;!&ndash;<prop key="java.lang.Exception"></prop>&ndash;&gt;-->
+    <!--<prop key="com.hanyong.auth.exception.NoPermissionException">redirect:http://localhost:63343/page/permissionError.html</prop>-->
+    <!--<prop key="com.hanyong.auth.exception.NoLoginException">redirect:http://localhost:63343/page/loginErroe.html</prop>-->
+    <!--</props>-->
+    <!--</property>-->
     <!--</bean>-->
 
     <!-- 邮件服务 -->

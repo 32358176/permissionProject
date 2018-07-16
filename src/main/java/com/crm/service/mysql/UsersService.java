@@ -1,13 +1,11 @@
-package com.crm.service;
+package com.crm.service.mysql;
 
-import com.crm.dao.ModulesMapper;
-import com.crm.dao.PermissionsMapper;
-import com.crm.dao.RolesMapper;
-import com.crm.dao.UsersMapper;
-import com.crm.pojo.Page;
-import com.crm.pojo.Permissions;
-import com.crm.pojo.Roles;
-import com.crm.pojo.Users;
+import com.crm.dao.mysql.ModulesMapper;
+import com.crm.dao.mysql.RolesMapper;
+import com.crm.dao.mysql.UsersMapper;
+import com.crm.pojo.mysql.Page;
+import com.crm.pojo.mysql.Roles;
+import com.crm.pojo.mysql.Users;
 import com.crm.utils.PasswordEncoder;
 import com.crm.utils.SystemLog;
 import com.github.pagehelper.PageHelper;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -175,6 +172,7 @@ public class UsersService {
 
     /**
      * 查询所有用户
+     *
      * @param page
      * @param limit
      * @return 查询所有用户返回分页信息
@@ -188,6 +186,7 @@ public class UsersService {
 
     /**
      * 不定条件查询
+     *
      * @param username
      * @param isLock
      * @param page
@@ -204,6 +203,7 @@ public class UsersService {
 
     /**
      * 执行了根据用户ID查询用户角色操作
+     *
      * @param userId
      * @return 执行了根据用户ID查询用户角色操作返回角色集合
      */
@@ -214,6 +214,7 @@ public class UsersService {
 
     /**
      * 执行了根据用户ID查询用户名操作
+     *
      * @param userId
      * @return 执行了根据用户ID查询用户名操作返回用户名
      */
@@ -224,6 +225,7 @@ public class UsersService {
 
     /**
      * 编辑用户信息
+     *
      * @param userid
      * @param username
      * @param password
@@ -247,6 +249,7 @@ public class UsersService {
 
     /**
      * 执行根据用户ID查询用户操作
+     *
      * @param userId
      * @return 执行根据用户ID查询用户操作返回信息
      */
@@ -269,6 +272,7 @@ public class UsersService {
 
     /**
      * 执行查询用户所有信息操作
+     *
      * @param userId
      * @return 执行查询用户所有信息操作返回信息
      */
@@ -296,6 +300,7 @@ public class UsersService {
 
     /**
      * 根据用户ID查询所有角色
+     *
      * @param userId
      * @return 根据用户ID查询所有角色返回信息
      */
@@ -319,6 +324,7 @@ public class UsersService {
 
     /**
      * 根据用户ID设置用户角色
+     *
      * @param userId
      * @param roleName
      * @return 根据用户ID设置用户角色返回信息
@@ -346,6 +352,7 @@ public class UsersService {
 
     /**
      * 根据用户ID删除用户角色
+     *
      * @param userId
      * @param roleName
      * @return 根据用户ID删除用户角色返回信息
@@ -366,6 +373,7 @@ public class UsersService {
 
     /**
      * 导出用户信息
+     *
      * @param response
      */
     @SystemLog(description = "导出用户信息", isWrite = false)

@@ -12,9 +12,14 @@
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
-    <!--GSON转换器-->
+    <!--返回JSON数据-->
     <mvc:annotation-driven>
         <mvc:message-converters>
+
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+            </bean>
+
             <bean class="org.springframework.http.converter.json.GsonHttpMessageConverter">
                 <property name="supportedMediaTypes">
                     <list>
@@ -23,9 +28,34 @@
                         <value>application/json;charset=UTF-8</value>
                     </list>
                 </property>
+                <!--日期格式处理-->
+                <property name="gson">
+                    <bean class="org.springframework.http.converter.json.GsonFactoryBean">
+                        <property name="serializeNulls" value="true"/>
+                        <property name="disableHtmlEscaping" value="true"/>
+                        <property name="dateFormatPattern" value="yyyy-MM-dd HH:mm:ss"/>
+                    </bean>
+                </property>
+
+
             </bean>
+
         </mvc:message-converters>
     </mvc:annotation-driven>
+    <!--&lt;!&ndash;GSON转换器&ndash;&gt;-->
+    <!--<mvc:annotation-driven>-->
+    <!--<mvc:message-converters>-->
+    <!--<bean class="org.springframework.http.converter.json.GsonHttpMessageConverter">-->
+    <!--<property name="supportedMediaTypes">-->
+    <!--<list>-->
+    <!--<value>text/html;charset=UTF-8</value>-->
+    <!--<value>text/plain;charset=UTF-8</value>-->
+    <!--<value>application/json;charset=UTF-8</value>-->
+    <!--</list>-->
+    <!--</property>-->
+    <!--</bean>-->
+    <!--</mvc:message-converters>-->
+    <!--</mvc:annotation-driven>-->
 
     <!--配置拦截器-->
     <mvc:interceptors>

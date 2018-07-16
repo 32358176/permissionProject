@@ -1,4 +1,4 @@
-package com.crm.dao;
+package com.crm.dao.mysql;
 
 import com.crm.pojo.mysql.Permissions;
 

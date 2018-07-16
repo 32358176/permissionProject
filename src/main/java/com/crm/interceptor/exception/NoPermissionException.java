@@ -1,6 +1,6 @@
 package com.crm.interceptor.exception;
 
-public class NoPermissionException extends Exception{
+public class NoPermissionException extends Exception {
     public NoPermissionException() {
         super("无权访问");
     }
