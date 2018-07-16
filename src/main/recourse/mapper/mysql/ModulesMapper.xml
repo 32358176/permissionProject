@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.dao.ModulesMapper">
+
+    <!--配置redis-->
+    <cache type="com.crm.utils.cache.RedisCache"/>
+
+    <resultMap id="BaseResultMap" type="com.crm.pojo.Modules">
+        <id column="Id" jdbcType="INTEGER" property="id"/>
+        <result column="Name" jdbcType="VARCHAR" property="name"/>
+        <result column="parentName" jdbcType="VARCHAR" property="parentName"/>
+        <result column="ParentId" jdbcType="INTEGER" property="parentid"/>
+        <result column="Path" jdbcType="VARCHAR" property="path"/>
+        <result column="Weight" jdbcType="INTEGER" property="weight"/>
+        <result column="Ops" jdbcType="VARCHAR" property="ops"/>
+        <result column="Int0" jdbcType="INTEGER" property="int0"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, Name,parentName, ParentId, Path, Weight, Ops, Int0
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from modules
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from modules
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.crm.pojo.Modules">
+    insert into modules (Id, Name, ParentId, 
+      Path, Weight, Ops, 
+      Int0)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{parentid,jdbcType=INTEGER}, 
+      #{path,jdbcType=VARCHAR}, #{weight,jdbcType=INTEGER}, #{ops,jdbcType=VARCHAR}, 
+      #{int0,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" parameterType="com.crm.pojo.Modules">
+        insert into modules
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="name != null">
+                Name,
+            </if>
+            <if test="parentid != null">
+                ParentId,
+            </if>
+            <if test="path != null">
+                Path,
+            </if>
+            <if test="weight != null">
+                Weight,
+            </if>
+            <if test="ops != null">
+                Ops,
+            </if>
+            <if test="int0 != null">
+                Int0,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="parentid != null">
+                #{parentid,jdbcType=INTEGER},
+            </if>
+            <if test="path != null">
+                #{path,jdbcType=VARCHAR},
+            </if>
+            <if test="weight != null">
+                #{weight,jdbcType=INTEGER},
+            </if>
+            <if test="ops != null">
+                #{ops,jdbcType=VARCHAR},
+            </if>
+            <if test="int0 != null">
+                #{int0,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.crm.pojo.Modules">
+        update modules
+        <set>
+            <if test="name != null">
+                Name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="parentid != null">
+                ParentId = #{parentid,jdbcType=INTEGER},
+            </if>
+            <if test="path != null">
+                Path = #{path,jdbcType=VARCHAR},
+            </if>
+            <if test="weight != null">
+                Weight = #{weight,jdbcType=INTEGER},
+            </if>
+            <if test="ops != null">
+                Ops = #{ops,jdbcType=VARCHAR},
+            </if>
+            <if test="int0 != null">
+                Int0 = #{int0,jdbcType=INTEGER},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.crm.pojo.Modules">
+    update modules
+    set Name = #{name,jdbcType=VARCHAR},
+      ParentId = #{parentid,jdbcType=INTEGER},
+      Path = #{path,jdbcType=VARCHAR},
+      Weight = #{weight,jdbcType=INTEGER},
+      Ops = #{ops,jdbcType=VARCHAR},
+      Int0 = #{int0,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="queryModuleIDByrolesID" resultType="java.lang.Integer" parameterType="list">
+        SELECT ModuleId FROM rolemodules WHERE RoleId in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="queryModulesNameByUserId" resultType="java.lang.String" parameterType="java.lang.Integer">
+    SELECT Name FROM modules WHERE Id IN
+    (SELECT ModuleId FROM rolemodules WHERE RoleId IN (
+    SELECT RoleId FROM userroles WHERE UserId = #{userId}
+    ))
+
+
+  </select>
+
+    <select id="selectModulesByModulesId" resultMap="BaseResultMap" parameterType="list">
+        SELECT * FROM modules WHERE Id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="queryAllModules" resultMap="BaseResultMap">
+    SELECT m.*,t.Name AS parentName FROM modules m LEFT JOIN modules t ON m.ParentId = t.Id ORDER BY m.Id
+  </select>
+
+    <insert id="insertModulesOnAdd">
+    INSERT INTO `ssm_ysd`.`modules` (`Name`, `ParentId`, `Path`, `Weight`)
+    VALUES (#{modulesName}, #{parentId}, #{modulesPath},#{modulesWeight});
+  </insert>
+    <select id="queryAllModulesName" resultType="java.lang.String">
+  SELECT Name FROM modules
+</select>
+    <delete id="delectModulesBymodulesId">
+    DELETE FROM modules WHERE modules.Id = #{modulesId}
+  </delete>
+    <delete id="deleteRolesModulesByModulesId">
+    DELETE FROM rolemodules WHERE ModuleId = #{modulesId}
+  </delete>
+    <select id="selectModulesByParentsId" resultMap="BaseResultMap">
+    SELECT * FROM modules WHERE ParentId = #{modulesId}
+  </select>
+
+    <update id="updateModulesByModulesId">
+    UPDATE `ssm_ysd`.`modules` SET `Name`= #{modulesName}, `ParentId`= #{parentId}, `Path`= #{modulesPath}, `Weight`= #{modulesWeight}
+     WHERE  `Id`= #{modulesId};
+  </update>
+    <select id="queryAllNoModulesByRolesId" resultMap="BaseResultMap">
+    SELECT * FROM modules WHERE Id NOT IN
+    (SELECT ModuleId FROM rolemodules WHERE RoleId = #{rolesId}) ORDER BY Id
+  </select>
+    <select id="queryAllModulesByRolesId" resultMap="BaseResultMap">
+    SELECT * FROM modules WHERE Id IN
+    (SELECT ModuleId FROM rolemodules WHERE RoleId = #{rolesId}) ORDER BY Id
+  </select>
+    <insert id="insertModulesByRoles">
+     INSERT INTO `ssm_ysd`.`rolemodules` (`RoleId`, `ModuleId`) VALUES (#{rolesId}, #{modulesId});
+    </insert>
+    <delete id="deleteModulesByRoles">
+      DELETE FROM `ssm_ysd`.`rolemodules` WHERE rolemodules.RoleId = #{rolesId} AND rolemodules.ModuleId = #{modulesId}
+    </delete>
+</mapper>

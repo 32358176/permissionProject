@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.dao.mysql.AskersMapper">
+
+    <!--配置redis-->
+    <cache type="com.crm.utils.cache.RedisCache"/>
+
+    <resultMap id="BaseResultMap" type="com.crm.pojo.mysql.Askers">
+        <id column="AskerId" jdbcType="INTEGER" property="askerid"/>
+        <result column="AskerName" jdbcType="VARCHAR" property="askername"/>
+        <result column="CheckState" jdbcType="VARCHAR" property="checkstate"/>
+        <result column="CheckInTime" jdbcType="TIMESTAMP" property="checkintime"/>
+        <result column="ChangeState" jdbcType="VARCHAR" property="changestate"/>
+        <result column="Weight" jdbcType="INTEGER" property="weight"/>
+        <result column="RoleName" jdbcType="VARCHAR" property="rolename"/>
+        <result column="BakContent" jdbcType="VARCHAR" property="bakcontent"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        AskerId, AskerName, CheckState, CheckInTime, ChangeState, Weight, RoleName, BakContent
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from askers
+        where AskerId = #{askerid,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from askers
+        where AskerId = #{askerid,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.crm.pojo.mysql.Askers">
+        insert into askers (AskerId, AskerName, CheckState,
+        CheckInTime, ChangeState, Weight,
+        RoleName, BakContent)
+        values (#{askerid,jdbcType=INTEGER}, #{askername,jdbcType=VARCHAR}, #{checkstate,jdbcType=VARCHAR},
+        #{checkintime,jdbcType=TIMESTAMP}, #{changestate,jdbcType=VARCHAR}, #{weight,jdbcType=INTEGER},
+        #{rolename,jdbcType=VARCHAR}, #{bakcontent,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.crm.pojo.mysql.Askers">
+        insert into askers
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="askerid != null">
+                AskerId,
+            </if>
+            <if test="askername != null">
+                AskerName,
+            </if>
+            <if test="checkstate != null">
+                CheckState,
+            </if>
+            <if test="checkintime != null">
+                CheckInTime,
+            </if>
+            <if test="changestate != null">
+                ChangeState,
+            </if>
+            <if test="weight != null">
+                Weight,
+            </if>
+            <if test="rolename != null">
+                RoleName,
+            </if>
+            <if test="bakcontent != null">
+                BakContent,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="askerid != null">
+                #{askerid,jdbcType=INTEGER},
+            </if>
+            <if test="askername != null">
+                #{askername,jdbcType=VARCHAR},
+            </if>
+            <if test="checkstate != null">
+                #{checkstate,jdbcType=VARCHAR},
+            </if>
+            <if test="checkintime != null">
+                #{checkintime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="changestate != null">
+                #{changestate,jdbcType=VARCHAR},
+            </if>
+            <if test="weight != null">
+                #{weight,jdbcType=INTEGER},
+            </if>
+            <if test="rolename != null">
+                #{rolename,jdbcType=VARCHAR},
+            </if>
+            <if test="bakcontent != null">
+                #{bakcontent,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.crm.pojo.mysql.Askers">
+        update askers
+        <set>
+            <if test="askername != null">
+                AskerName = #{askername,jdbcType=VARCHAR},
+            </if>
+            <if test="checkstate != null">
+                CheckState = #{checkstate,jdbcType=VARCHAR},
+            </if>
+            <if test="checkintime != null">
+                CheckInTime = #{checkintime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="changestate != null">
+                ChangeState = #{changestate,jdbcType=VARCHAR},
+            </if>
+            <if test="weight != null">
+                Weight = #{weight,jdbcType=INTEGER},
+            </if>
+            <if test="rolename != null">
+                RoleName = #{rolename,jdbcType=VARCHAR},
+            </if>
+            <if test="bakcontent != null">
+                BakContent = #{bakcontent,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where AskerId = #{askerid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.crm.pojo.mysql.Askers">
+        update askers
+        set AskerName = #{askername,jdbcType=VARCHAR},
+        CheckState = #{checkstate,jdbcType=VARCHAR},
+        CheckInTime = #{checkintime,jdbcType=TIMESTAMP},
+        ChangeState = #{changestate,jdbcType=VARCHAR},
+        Weight = #{weight,jdbcType=INTEGER},
+        RoleName = #{rolename,jdbcType=VARCHAR},
+        BakContent = #{bakcontent,jdbcType=VARCHAR}
+        where AskerId = #{askerid,jdbcType=INTEGER}
+    </update>
+    <select id="queryAllTeacher" resultMap="BaseResultMap">
+        SELECT * FROM askers
+    </select>
+</mapper>

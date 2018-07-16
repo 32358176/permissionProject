@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.dao.UsersMapper">
+
+    <!--配置redis-->
+    <cache type="com.crm.utils.cache.RedisCache"/>
+
+    <resultMap id="BaseResultMap" type="com.crm.pojo.Users">
+        <id column="Id" jdbcType="INTEGER" property="id"/>
+        <result column="LoginName" jdbcType="VARCHAR" property="loginname"/>
+        <result column="Password" jdbcType="VARCHAR" property="password"/>
+        <result column="IsLockout" jdbcType="CHAR" property="islockout"/>
+        <result column="LastLoginTime" jdbcType="TIMESTAMP" property="lastlogintime"/>
+        <result column="PsdWrongTime" jdbcType="INTEGER" property="psdwrongtime"/>
+        <result column="LockTime" jdbcType="TIMESTAMP" property="locktime"/>
+        <result column="ProtectEMail" jdbcType="VARCHAR" property="protectemail"/>
+        <result column="protectMTel" jdbcType="VARCHAR" property="protectmtel"/>
+        <result column="CreateTime" jdbcType="TIMESTAMP" property="createtime"/>
+        <result column="LastLoginIp" jdbcType="TIMESTAMP" property="lastloginip"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, LoginName, Password, IsLockout, LastLoginTime, PsdWrongTime, LockTime, ProtectEMail, 
+    protectMTel, CreateTime,LastLoginIp
+  </sql>
+    <select id="selectUserByUserNameAndPassword" resultMap="BaseResultMap">
+    SELECT * FROM users WHERE LoginName = #{username} AND Password = #{password}
+  </select>
+    <select id="selectUserByUsername" resultMap="BaseResultMap">
+        SELECT * FROM users WHERE LoginName = #{username}
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from users
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.crm.pojo.Users">
+    insert into users (Id, LoginName, Password, 
+      IsLockout, LastLoginTime, PsdWrongTime, 
+      LockTime, ProtectEMail, protectMTel, 
+      CreateTime)
+    values (#{id,jdbcType=INTEGER}, #{loginname,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{islockout,jdbcType=CHAR}, #{lastlogintime,jdbcType=TIMESTAMP}, #{psdwrongtime,jdbcType=INTEGER}, 
+      #{locktime,jdbcType=TIMESTAMP}, #{protectemail,jdbcType=VARCHAR}, #{protectmtel,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.crm.pojo.Users">
+        insert into users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="loginname != null">
+                LoginName,
+            </if>
+            <if test="password != null">
+                Password,
+            </if>
+            <if test="islockout != null">
+                IsLockout,
+            </if>
+            <if test="lastlogintime != null">
+                LastLoginTime,
+            </if>
+            <if test="psdwrongtime != null">
+                PsdWrongTime,
+            </if>
+            <if test="locktime != null">
+                LockTime,
+            </if>
+            <if test="protectemail != null">
+                ProtectEMail,
+            </if>
+            <if test="protectmtel != null">
+                protectMTel,
+            </if>
+            <if test="createtime != null">
+                CreateTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="loginname != null">
+                #{loginname,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="islockout != null">
+                #{islockout,jdbcType=CHAR},
+            </if>
+            <if test="lastlogintime != null">
+                #{lastlogintime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="psdwrongtime != null">
+                #{psdwrongtime,jdbcType=INTEGER},
+            </if>
+            <if test="locktime != null">
+                #{locktime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="protectemail != null">
+                #{protectemail,jdbcType=VARCHAR},
+            </if>
+            <if test="protectmtel != null">
+                #{protectmtel,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.crm.pojo.Users">
+        update users
+        <set>
+            <if test="loginname != null">
+                LoginName = #{loginname,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                Password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="islockout != null">
+                IsLockout = #{islockout,jdbcType=CHAR},
+            </if>
+            <if test="lastlogintime != null">
+                LastLoginTime = #{lastlogintime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="psdwrongtime != null">
+                PsdWrongTime = #{psdwrongtime,jdbcType=INTEGER},
+            </if>
+            <if test="locktime != null">
+                LockTime = #{locktime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="protectemail != null">
+                ProtectEMail = #{protectemail,jdbcType=VARCHAR},
+            </if>
+            <if test="protectmtel != null">
+                protectMTel = #{protectmtel,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                CreateTime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.crm.pojo.Users">
+    update users
+    set LoginName = #{loginname,jdbcType=VARCHAR},
+      Password = #{password,jdbcType=VARCHAR},
+      IsLockout = #{islockout,jdbcType=CHAR},
+      LastLoginTime = #{lastlogintime,jdbcType=TIMESTAMP},
+      PsdWrongTime = #{psdwrongtime,jdbcType=INTEGER},
+      LockTime = #{locktime,jdbcType=TIMESTAMP},
+      ProtectEMail = #{protectemail,jdbcType=VARCHAR},
+      protectMTel = #{protectmtel,jdbcType=VARCHAR},
+      CreateTime = #{createtime,jdbcType=TIMESTAMP}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="queryPermissionByUserId" resultType="java.lang.String">
+    SELECT permissionValue FROM permissions WHERE Id IN
+    (SELECT permissionId FROM rolepermissions WHERE RoleId IN
+    (SELECT userroles.RoleId FROM userroles WHERE UserId = #{userId}
+    ))
+
+  </select>
+
+    <select id="selectIsLockoutByUserId" resultType="java.lang.String">
+    SELECT IsLockout FROM users WHERE Id = #{id}
+  </select>
+    <select id="queryAllUsers" resultMap="BaseResultMap">
+        SELECT * FROM users WHERE 1 = 1
+    </select>
+
+    <select id="queryUserByUserName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT * FROM users WHERE LoginName LIKE #{username}
+    </select>
+    <select id="queryUserByisLock" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT * FROM users WHERE IsLockout LIKE #{isLock}
+    </select>
+    <select id="queryUserByTerm" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT * FROM users WHERE 1 = 1
+        <if test="username != null and username != ''">
+            AND LoginName = #{username}
+        </if>
+        <if test="isLock != null and isLock != ''">
+            AND IsLockout = #{isLock}
+        </if>
+    </select>
+    <select id="selectRolesByUserId" resultType="java.lang.String">
+        SELECT Name FROM roles WHERE Id IN
+        (SELECT RoleId FROM userroles WHERE UserId = #{userId})
+    </select>
+    <select id="selectUsernameByUserId" resultType="java.lang.String">
+        SELECT LoginName FROM users WHERE Id = #{userId}
+    </select>
+    <delete id="delectUserByUserId">
+    DELETE FROM users WHERE Id = #{userId}
+</delete>
+    <delete id="deleteUserRoleByUserId">
+        DELETE FROM userroles WHERE UserId = #{userId}
+    </delete>
+
+    <insert id="insertUser" parameterType="java.lang.String">
+        INSERT INTO users (`LoginName`, `Password`, `ProtectEMail`, `protectMTel`,`createtime`) VALUES
+         (#{username}, #{password}, #{email}, #{telephone},now());
+    </insert>
+
+    <update id="resetUserPassword">
+        UPDATE users SET Password = #{password} WHERE Id = #{userId}
+    </update>
+
+    <update id="updateUserByUser">
+        UPDATE users SET LoginName = #{username},Password = #{password},
+        ProtectEMail = #{email},protectMTel = #{telephone} WHERE Id = #{userid}
+    </update>
+    <update id="lockUserByUserId">
+        UPDATE users SET IsLockout = #{isLockout} WHERE Id = #{userId}
+    </update>
+    <select id="selectUserByUserId" resultMap="BaseResultMap">
+        SELECT * FROM users WHERE Id = #{userId}
+    </select>
+    <insert id="inertUserRolesByUserId">
+        INSERT INTO `ssm_ysd`.`userroles` (`UserId`, `RoleId`)
+        VALUES (#{userId}, (SELECT roles.Id FROM roles WHERE Name = #{roleName}))
+    </insert>
+    
+    <delete id="removeUserRoleByUserId">
+      DELETE FROM userroles WHERE UserId = #{userId} AND RoleId =
+      (SELECT roles.Id FROM roles WHERE Name = #{roleName})
+    </delete>
+    <update id="updateUserWrongCount">
+        UPDATE users SET PsdWrongTime = PsdWrongTime + 1 WHERE LoginName = #{username}
+    </update>
+    <update id="clearWrongTime">
+        UPDATE users SET PsdWrongTime = 0 WHERE Id = #{userId}
+    </update>
+    <update id="updateUserIpAndTime">
+      UPDATE users SET LastLoginTime = now(), LastLoginIp = #{Ip} WHERE Id = #{userId}
+    </update>
+</mapper>

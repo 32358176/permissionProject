@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.dao.RolesMapper">
+
+  <!--配置redis-->
+  <cache type="com.crm.utils.cache.RedisCache"/>
+
+  <resultMap id="BaseResultMap" type="com.crm.pojo.Roles">
+    <id column="Id" jdbcType="INTEGER" property="id" />
+    <result column="Name" jdbcType="VARCHAR" property="name" />
+    <result column="Int0" jdbcType="INTEGER" property="int0" />
+    <result column="String0" jdbcType="VARCHAR" property="string0" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    Id, Name, Int0, String0
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from roles
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from roles
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.crm.pojo.Roles">
+    insert into roles (Id, Name, Int0, 
+      String0)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{int0,jdbcType=INTEGER}, 
+      #{string0,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.crm.pojo.Roles">
+    insert into roles
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        Id,
+      </if>
+      <if test="name != null">
+        Name,
+      </if>
+      <if test="int0 != null">
+        Int0,
+      </if>
+      <if test="string0 != null">
+        String0,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="int0 != null">
+        #{int0,jdbcType=INTEGER},
+      </if>
+      <if test="string0 != null">
+        #{string0,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crm.pojo.Roles">
+    update roles
+    <set>
+      <if test="name != null">
+        Name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="int0 != null">
+        Int0 = #{int0,jdbcType=INTEGER},
+      </if>
+      <if test="string0 != null">
+        String0 = #{string0,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crm.pojo.Roles">
+    update roles
+    set Name = #{name,jdbcType=VARCHAR},
+      Int0 = #{int0,jdbcType=INTEGER},
+      String0 = #{string0,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="queryRolesByUserID" resultType="java.lang.Integer">
+    SELECT RoleId FROM userroles WHERE UserId = #{userid}
+  </select>
+  <!--<select id="queryRolesValueByUserID" resultMap="java.lang.String">-->
+    <!--SELECT Name FROM roles WHERE Id IN (-->
+    <!--SELECT RoleId FROM userroles WHERE UserId = #{id}-->
+    <!--)-->
+  <!--</select>-->
+  <select id="queryAllRolesName" resultType="java.lang.String">
+    SELECT Name FROM roles
+  </select>
+  <select id="queryUserNoRoles" resultType="java.lang.String">
+    SELECT Name FROM roles WHERE Id NOT IN
+    (SELECT RoleId FROM userroles WHERE UserId = #{userId})
+  </select>
+  <select id="queryAllRoles" resultMap="BaseResultMap">
+    SELECT * FROM roles
+  </select>
+  <insert id="insertRolesByRolesName">
+   INSERT INTO `ssm_ysd`.`roles` (`Name`) VALUES (#{rolesName});
+  </insert>
+  <delete id="delectRolesByRolesId">
+    DELETE FROM roles WHERE Id = #{rolesId}
+  </delete>
+  <delete id="delectUserRolesByRolesId">
+    DELETE FROM userroles WHERE RoleId = #{rolesId}
+  </delete>
+  <delete id="delectRolesPermissionByRolesId">
+    DELETE FROM rolepermissions WHERE RoleId = #{rolesId}
+  </delete>
+  <delete id="delectRolesModulesByRolesId">
+    DELETE FROM rolemodules WHERE RoleId = #{rolesId}
+  </delete>
+  <update id="updateRolesNameByRolesName">
+    UPDATE `ssm_ysd`.`roles` SET `Name`=#{rolesName} WHERE  `Id`=#{rolesId};
+  </update>
+  <select id="noRolesPermission" resultType="java.lang.String">
+    SELECT permissionName FROM permissions WHERE Id NOT IN
+    (SELECT permissionId FROM rolepermissions WHERE RoleId = #{rolesName})
+  </select>
+  <select id="selectPermissionByRolesId" resultType="java.lang.String">
+    SELECT permissionName FROM permissions WHERE Id IN
+    (SELECT permissionId FROM rolepermissions WHERE RoleId = #{rolesName})
+  </select>
+  <insert id="insertRolesPermissionByRolesId">
+    INSERT INTO `ssm_ysd`.`rolepermissions` (`RoleId`, `permissionId`) VALUES (#{rolesId},
+    (SELECT Id FROM permissions WHERE permissionName = #{permissionName}));
+  </insert>
+  <delete id="removeRolesPermissions">
+    DELETE FROM rolepermissions WHERE RoleId = #{rolesId} AND permissionId =
+    (SELECT Id FROM permissions WHERE permissionName = #{permissionName})
+  </delete>
+  <select id="selsectModulesByRolesId" resultType="java.lang.String">
+    SELECT Name FROM modules WHERE Id IN
+    (SELECT ModuleId FROM rolemodules WHERE RoleId = #{rolesId})
+  </select>
+  <select id="selectUsersByRolesId" resultType="java.lang.String">
+    SELECT LoginName FROM users WHERE Id IN
+    (SELECT UserId FROM userroles WHERE RoleId = #{rolesId})
+  </select>
+</mapper>
